@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mike APP</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #2c2c2c, #595959);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+    }
+    .smartphone {
+      width: 360px;
+      height: 640px;
+      background-color: #3a3a3a;
+      border-radius: 20px;
+      box-shadow: 0 0 20px black;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      position: relative;
+    }
+    .header {
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+    .datetime {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.2em;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .button {
+      background-color: red;
+      border: 2px solid white;
+      height: 80px;
+      font-size: 1em;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    #apoioBtn {
+      background-color: red;
+      border: 2px solid white;
+      height: 60px;
+      width: 100%;
+      font-weight: bold;
+      position: relative;
+      margin-bottom: 10px;
+    }
+    #perigoMsg {
+      display: none;
+      position: absolute;
+      top: -30px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: yellow;
+      font-weight: bold;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0; }
+    }
+    #githubImage {
+      width: 100%;
+      height: auto;
+      margin-top: 10px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="smartphone">
+    <div class="header">Mike APP</div>
+    <div class="datetime" id="datetime"></div>
+
+    <div class="buttons">
+      <button class="button" onclick="window.location.href='LINK1'">Botão 1</button>
+      <button class="button" onclick="window.location.href='LINK2'">Botão 2</button>
+      <button class="button" onclick="window.location.href='LINK3'">Botão 3</button>
+      <button class="button" onclick="window.location.href='LINK4'">Botão 4</button>
+    </div>
+
+    <button id="apoioBtn" onmousedown="startHold()" onmouseup="cancelHold()" onmouseleave="cancelHold()">
+      <div id="perigoMsg">POLICIAL EM PERIGO</div>
+      APOIO
+    </button>
+
+    <!-- Insira o link da imagem do GitHub abaixo -->
+    <img id="githubImage" src="https://github.com/usuario/repositorio/imagem.png" alt="Imagem do GitHub">
+  </div>
+
+  <script>
+    function updateDateTime() {
+      const now = new Date();
+      const formatted = now.toLocaleString();
+      document.getElementById('datetime').innerText = formatted;
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    let holdTimer;
+
+    function startHold() {
+      holdTimer = setTimeout(sendLocationEmail, 2000);
+    }
+
+    function cancelHold() {
+      clearTimeout(holdTimer);
+    }
+
+    function sendLocationEmail() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          const link = `mailto:2bpmi5ciaservdia@policiamilitar.sp.gov.br?subject=Policial em Perigo&body=Localização: https://www.google.com/maps?q=${latitude},${longitude}\nCoordenadas: ${latitude}, ${longitude}`;
+          document.getElementById('perigoMsg').style.display = 'block';
+          window.location.href = link;
+        });
+      } else {
+        alert("Geolocalização não suportada.");
+      }
+    }
+  </script>
+</body>
+</html>
