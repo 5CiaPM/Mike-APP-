@@ -98,13 +98,13 @@
       <button class="button" onclick="window.location.href='LINK4'">Botão 4</button>
     </div>
 
-    <button id="apoioBtn" ontouchstart="startHold()" ontouchend="cancelHold()">
+    <button id="apoioBtn" onmousedown="startHold()" onmouseup="cancelHold()" onmouseleave="cancelHold()">
       <div id="perigoMsg">POLICIAL EM PERIGO</div>
       APOIO
     </button>
 
     <!-- Insira o link da imagem do GitHub abaixo -->
-    <img id="githubImage" src="https://github.com/user-attachments/assets/5cec3794-eacd-4b93-b75a-0c631dd09788" alt="Imagem do GitHub">
+    <img id="githubImage" src="https://raw.githubusercontent.com/usuario/repositorio/branch/imagem.png" alt="Imagem do GitHub">
   </div>
 
   <script>
@@ -131,9 +131,18 @@
         navigator.geolocation.getCurrentPosition(function(position) {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
-          const link = `mailto:2bpmi5cia@policiamilitar.sp.gov.br?subject=Policial em Perigo&body=Localização: https://www.google.com/maps?q=${latitude},${longitude}\nCoordenadas: ${latitude}, ${longitude}`;
-          document.getElementById('perigoMsg').style.display = 'block';
-          window.location.href = link;
+
+          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+            .then(response => response.json())
+            .then(data => {
+              const endereco = data.display_name;
+              const link = `mailto:2bpmi5ciaservdia@policiamilitar.sp.gov.br?subject=Policial em Perigo&body=Localização: https://www.google.com/maps?q=${latitude},${longitude}%0AEndereço: ${encodeURIComponent(endereco)}%0ACoordenadas: ${latitude}, ${longitude}`;
+              document.getElementById('perigoMsg').style.display = 'block';
+              window.location.href = link;
+            })
+            .catch(() => {
+              alert("Erro ao obter o endereço.");
+            });
         });
       } else {
         alert("Geolocalização não suportada.");
