@@ -1,143 +1,156 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mike APP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
+      background-color: #2e2e2e;
+      color: white;
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #2c2c2c, #595959);
-      color: white;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
       height: 100vh;
     }
+
     .smartphone {
       width: 360px;
       height: 640px;
-      background-color: #3a3a3a;
-      border-radius: 20px;
-      box-shadow: 0 0 20px black;
+      background-color: #1c1c1c;
+      border: 16px solid #333;
+      border-radius: 36px;
+      padding: 20px;
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      padding: 20px;
-      position: relative;
+      align-items: center;
+      box-shadow: 0 0 20px #000;
     }
-    .header {
-      text-align: center;
-      font-size: 1.5em;
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #ffffff;
-    }
+
     .datetime {
-      text-align: center;
+      font-size: 16px;
       margin-bottom: 20px;
-      font-size: 1.2em;
     }
-    .buttons {
+
+    .buttons-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 15px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
-    .button {
+
+    .btn-square {
       background-color: red;
-      border: 2px solid white;
-      height: 80px;
-      font-size: 1em;
       color: white;
-      border-radius: 10px;
+      border: 2px solid white;
+      border-radius: 15px;
+      height: 80px;
+      font-size: 14px;
       cursor: pointer;
     }
-    #apoioBtn {
-      background-color: red;
-      border: 2px solid white;
-      height: 60px;
+
+    .github-image {
       width: 100%;
-      font-weight: bold;
-      position: relative;
-      margin-bottom: 10px;
-    }
-    #perigoMsg {
-      display: none;
-      position: absolute;
-      top: -30px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      color: yellow;
-      font-weight: bold;
-      animation: blink 1s infinite;
-    }
-    @keyframes blink {
-      0%, 50%, 100% { opacity: 1; }
-      25%, 75% { opacity: 0; }
-    }
-    #githubImage {
-      width: 100%;
-      height: auto;
-      margin-top: 10px;
+      height: 120px;
+      background-size: cover;
+      background-position: center;
+      margin-bottom: 20px;
       border-radius: 10px;
+    }
+
+    .apoio-btn {
+      background-color: red;
+      color: white;
+      border: 2px solid white;
+      padding: 15px;
+      border-radius: 10px;
+      width: 100%;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="smartphone">
-    <div class="header">Mike APP</div>
-    <div class="datetime" id="datetime"></div>
+    <div class="datetime" id="datetime">Carregando...</div>
 
-    <div class="buttons">
-      <button class="button" onclick="https://5ciapm.github.io/Meu-Pvt/='LINK1'">PVT</button>
-      <button class="button" onclick="window.location.href='LINK2'">EAP</button>
-      <button class="button" onclick="window.location.href='LINK3'">Botão 3</button>
-      <button class="button" onclick="window.location.href='LINK4'">Botão 4</button>
+    <div class="buttons-grid">
+      <button class="btn-square" onclick="window.location.href='https://link1.com'">Botão 1</button>
+      <button class="btn-square" onclick="window.location.href='https://link2.com'">Botão 2</button>
+      <button class="btn-square" onclick="window.location.href='https://link3.com'">Botão 3</button>
+      <button class="btn-square" onclick="window.location.href='https://link4.com'">Botão 4</button>
     </div>
 
-    <button id="apoioBtn" onmousedown="startHold()" onmouseup="cancelHold()" onmouseleave="cancelHold()">
-      <div id="perigoMsg">POLICIAL EM PERIGO</div>
-      APOIO
-    </button>
+    <div class="github-image" id="githubImage"
+      style="background-image: url('https://raw.githubusercontent.com/SEU_USUARIO/REPOSITORIO/main/imagem.jpg');">
+    </div>
 
-    <!-- Insira o link da imagem do GitHub abaixo -->
-    <img id="githubImage" src="https://github.com/user-attachments/assets/5cec3794-eacd-4b93-b75a-0c631dd09788" alt="Imagem do GitHub">
+    <button class="apoio-btn" id="apoioBtn">🆘 Apoio</button>
   </div>
 
   <script>
+    // Atualiza data e hora
     function updateDateTime() {
       const now = new Date();
-      const formatted = now.toLocaleString();
-      document.getElementById('datetime').innerText = formatted;
+      const dateTimeStr = now.toLocaleString('pt-BR');
+      document.getElementById('datetime').textContent = dateTimeStr;
     }
+
     setInterval(updateDateTime, 1000);
     updateDateTime();
 
-    let holdTimer;
+    // Lógica do botão de apoio com hold de 2 segundos
+    let apoioBtn = document.getElementById('apoioBtn');
+    let holdTimeout;
 
-    function startHold() {
-      holdTimer = setTimeout(sendLocationEmail, 2000);
-    }
+    apoioBtn.addEventListener('mousedown', () => {
+      holdTimeout = setTimeout(enviarLocalizacao, 2000);
+    });
 
-    function cancelHold() {
-      clearTimeout(holdTimer);
-    }
+    apoioBtn.addEventListener('mouseup', () => {
+      clearTimeout(holdTimeout);
+    });
 
-    function sendLocationEmail() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-          const link = `mailto:2bpmi5cia@policiamilitar.sp.gov.br?subject=Policial em Perigo&body=Localização: https://www.google.com/maps?q=${latitude},${longitude}\nCoordenadas: ${latitude}, ${longitude}`;
-          document.getElementById('perigoMsg').style.display = 'block';
-          window.location.href = link;
-        });
-      } else {
-        alert("Geolocalização não suportada.");
+    apoioBtn.addEventListener('touchstart', () => {
+      holdTimeout = setTimeout(enviarLocalizacao, 2000);
+    });
+
+    apoioBtn.addEventListener('touchend', () => {
+      clearTimeout(holdTimeout);
+    });
+
+    function enviarLocalizacao() {
+      if (!navigator.geolocation) {
+        alert('Geolocalização não é suportada nesse dispositivo.');
+        return;
       }
+
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+          const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          const data = await response.json();
+          const endereco = data.display_name || `Lat: ${latitude}, Lon: ${longitude}`;
+
+          const email = "2bpmi5cia@policiamilitar.sp.gov.br";
+          const assunto = encodeURIComponent("Pedido de Apoio");
+          const corpo = encodeURIComponent(`Policial em perigo nesse endereço:\n${endereco}`);
+
+          // Abre o app de email padrão
+          window.location.href = `mailto:${email}?subject=${assunto}&body=${corpo}`;
+
+        } catch (error) {
+          alert('Erro ao obter endereço.');
+        }
+      }, () => {
+        alert('Erro ao acessar localização.');
+      });
     }
   </script>
 </body>
